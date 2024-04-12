@@ -115,6 +115,12 @@ form[action$="destroy"] button {
   padding-right: 2rem;
 }
 
+#fav-button-container {
+  justify-content: center;
+  border-top: 1px solid #e3e3e3;
+  order: 1;
+}
+
 #sidebar h1 {
   font-size: 1rem;
   font-weight: 500;
@@ -122,8 +128,7 @@ form[action$="destroy"] button {
   align-items: center;
   margin: 0;
   padding: 1rem 2rem;
-  border-top: 1px solid #e3e3e3;
-  order: 1;
+  order: 2;
   line-height: 1;
 }
 

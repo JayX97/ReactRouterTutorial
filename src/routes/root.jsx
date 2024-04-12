@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
     Outlet, 
     NavLink,
@@ -26,6 +26,7 @@ export default function Root() {
     const { contacts, q } = useLoaderData();
     const navigation = useNavigation();
     const submit = useSubmit();
+    const [toggleFav, setToggleFav] = useState(false);
 
     const searching =
       navigation.location &&
@@ -37,10 +38,19 @@ export default function Root() {
       document.getElementById("q").value = q;
     }, [q]);
 
+    //New function to render favorite contacts on navbar
+    const displayFav = () => {
+      setToggleFav(toggleFav => !toggleFav);
+    };
+
     return (
       <>
         <div id="sidebar">
           <h1>React Router Contacts</h1>
+          {/* Implemented button to show only favorites on the sidebar */}
+          <div id="fav-button-container">
+            <button onClick={displayFav}>Toggle Favorites</button>
+          </div>
           <div>
             <Form id="search-form" role="search">
               <input
@@ -73,7 +83,7 @@ export default function Root() {
             </Form>
           </div>
           <nav>
-            {contacts.length ? (
+            {!toggleFav && contacts.length ? (
                 <ul>
                 {contacts.map((contact) => (
                     <li key={contact.id}>
@@ -100,6 +110,35 @@ export default function Root() {
                     </li>
                 ))}
             </ul> 
+            ) : toggleFav && contacts.length ? ( // branch to filter favorite contacts
+              <ul>
+                {contacts.filter((contact) => {
+                  return contact.favorite === true;
+                }).map((contact) => (
+                    <li key={contact.id}>
+                        <NavLink 
+                          to={`contacts/${contact.id}`}
+                          className={({ isActive, isPending }) =>
+                            isActive
+                              ? "active"
+                              : isPending
+                              ? "pending"
+                              : ""
+                          }
+                        >
+                            {contact.first || contact.last ? (
+                                <>
+                                    {contact.first} {contact.last}
+                                </>
+                            ) : (
+                                <i>No Name</i>
+                            )
+                        }{" "}
+                        {contact.favorite && <span>★</span>}
+                        </NavLink>
+                    </li>
+                ))}
+            </ul>
             ) : (
                 <p>
                     <i>No contact</i>
